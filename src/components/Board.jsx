@@ -13,18 +13,20 @@ function Board({ xIsNext, squares, onPlay }) {
     } else {
       nextSquares[i] = 'O';
     }
-    onPlay(nextSquares);
+    // Pass both the updated squares and the move location
+    onPlay(nextSquares, i);
   }
 
   const winnerInfo = calculateWinner(squares);
   let status;
   let winningLine = [];
-
+  
   if (winnerInfo) {
     status = 'Winner: ' + winnerInfo.winner;
     winningLine = winnerInfo.winningLine;
   } else if (squares.every(square => square)) {
-    status = 'Draw: Gamed ended in a tie!';
+    // If every square is filled and no winner, it's a draw
+    status = 'Draw: Game ended in a tie!';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -35,12 +37,14 @@ function Board({ xIsNext, squares, onPlay }) {
     const rowSquares = [];
     for (let col = 0; col < 3; col++) {
       const index = row * 3 + col;
-      const isWinningSquare = winningLine.includes(index);
+      // Check if this square is part of the winning line
+      const isWinningSquare = winningLine && winningLine.includes(index);
+      
       rowSquares.push(
         <Square 
           key={index} 
           value={squares[index]} 
-          onSquareClick={() => handleClick(index)} 
+          onSquareClick={() => handleClick(index)}
           isWinning={isWinningSquare}
         />
       );
