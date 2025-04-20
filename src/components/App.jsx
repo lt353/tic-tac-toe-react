@@ -18,12 +18,22 @@ function App() {
   }
 
   const moves = history.map((squares, move) => {
-    let description;
-    if (move > 0) {
-      description = 'Go to move #' + move;
-    } else {
-      description = 'Go to game start';
+    // for current move, show text instead of a button
+    if (move === currentMove) {
+      const description = move > 0 
+        ? `You are at move #${move}` 
+        : 'You are at game start';
+      return (
+        <li key={move}>
+          <span>{description}</span>
+        </li>
+      );
     }
+
+    // For other moves, show clickable buttons as before
+    const description = move > 0
+      ? `Go to move #${move}`
+      : 'Go to game start';
     return (
       <li key={move}>
         <button onClick={() => jumpTo(move)}>{description}</button>
