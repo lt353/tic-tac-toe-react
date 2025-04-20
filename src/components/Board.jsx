@@ -16,10 +16,15 @@ function Board({ xIsNext, squares, onPlay }) {
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
+  const winnerInfo = calculateWinner(squares);
   let status;
-  if (winner) {
-    status = 'Winner: ' + winner;
+  let winningLine = [];
+
+  if (winnerInfo) {
+    status = 'Winner: ' + winnerInfo.winner;
+    winningLine = winnerInfo.winningLine;
+  } else if (squares.every(square => square)) {
+    status = 'Draw: Gamed ended in a tie!';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -30,11 +35,13 @@ function Board({ xIsNext, squares, onPlay }) {
     const rowSquares = [];
     for (let col = 0; col < 3; col++) {
       const index = row * 3 + col;
+      const isWinningSquare = winningLine.includes(index);
       rowSquares.push(
         <Square 
           key={index} 
           value={squares[index]} 
           onSquareClick={() => handleClick(index)} 
+          isWinning={isWinningSquare}
         />
       );
     }
