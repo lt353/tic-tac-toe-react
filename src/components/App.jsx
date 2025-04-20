@@ -4,6 +4,7 @@ import Board from './Board';
 function App() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [isAscending, setIsAscending] = useState(true);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
@@ -17,7 +18,11 @@ function App() {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((squares, move) => {
+  function toggleSortOrder() {
+    setIsAscending(!isAscending);
+  }
+
+  let moves = history.map((squares, move) => {
     // for current move, show text instead of a button
     if (move === currentMove) {
       const description = move > 0 
@@ -40,6 +45,9 @@ function App() {
       </li>
     );
   });
+  if (!isAscending) {
+    moves = moves.reverse();
+  }
 
   return (
     <div className="game">
@@ -47,6 +55,11 @@ function App() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
+        <div>
+          <button onClick={toggleSortOrder}>
+            Sort {isAscending ? 'Ascending' : 'Descending'}
+          </button>
+        </div>
         <ol>{moves}</ol>
       </div>
     </div>
